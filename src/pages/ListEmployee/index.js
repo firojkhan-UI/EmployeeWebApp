@@ -1,8 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { LIST_EMP_URL } from '../../apiUrls';
 
+const WrapperTable = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+`;
+
+const Table = styled.table`
+    border-collapse: collapse;
+    width: 80%;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+`;
+
+const Th = styled.th`
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    background-color: #f4f4f4;
+`;
+
+const Td = styled.td`
+    border: 1px solid #ddd;
+    padding: 8px;
+`;
+
 const ListEmployee = () => {
-    const [list, setList] = useState([])
+    const [list, setList] = useState([]);
 
     async function fetchWithRetry(url, options, retries = 3, delay = 2000) {
         try {
@@ -22,35 +48,39 @@ const ListEmployee = () => {
             throw error;
         }
     }
-    
-    // Usage
-    fetchWithRetry('https://dummy.restapiexample.com/api/v1/employees')
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error fetching data:', error));
-    
 
-    console.log(list, "list:::::")
-    return (<div>
-        <h4>List Employee Tabel</h4>
-        <div>
-            {list?.map((item, id) => <table>
-                <tr>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        Employee Name
-                    </th>
-                    <th>
-                        Employee Salary
-                    </th>
-                    <th>
-                        Employee Age
-                    </th>
-                </tr>
-            </table> )}
-        </div>
-    </div>)
-}
+    useEffect(() => {
+        fetchWithRetry(LIST_EMP_URL)
+            .then(response => response.json())
+            .then(data => setList(data?.data|| []))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+    console.log(list,"List:::::")
+    return (
+        <WrapperTable>
+            <Table>
+                <thead>
+                    <tr>
+                        <Th>ID</Th>
+                        <Th>Employee Name</Th>
+                        <Th>Employee Salary</Th>
+                        <Th>Employee Age</Th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {list.map(item => (
+                        <tr key={item.id}>
+                            <Td>{item.id}</Td>
+                            <Td>{item.employee_name}</Td>
+                            <Td>{item.employee_salary}</Td>
+                            <Td>{item.employee_age}</Td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </WrapperTable>
+    );
+};
+
 export default ListEmployee;
