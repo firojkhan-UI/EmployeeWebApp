@@ -52,7 +52,7 @@ const ListEmployee = () => {
     useEffect(() => {
         fetchWithRetry(LIST_EMP_URL)
             .then(response => response.json())
-            .then(data => setList(data?.data|| []))
+            .then(data => setList(data || []))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
@@ -65,16 +65,14 @@ const ListEmployee = () => {
                         <Th>ID</Th>
                         <Th>Employee Name</Th>
                         <Th>Employee Salary</Th>
-                        <Th>Employee Age</Th>
                     </tr>
                 </thead>
                 <tbody>
                     {list.map(item => (
                         <tr key={item.id}>
                             <Td>{item.id}</Td>
-                            <Td>{item.employee_name}</Td>
-                            <Td>{item.employee_salary}</Td>
-                            <Td>{item.employee_age}</Td>
+                            <Td>{item.firstName}</Td>
+                            <Td>{item.lastName}</Td>
                         </tr>
                     ))}
                 </tbody>
