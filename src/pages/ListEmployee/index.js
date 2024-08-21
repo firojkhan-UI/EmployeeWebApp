@@ -65,6 +65,7 @@ const ListEmployee = () => {
                         <Th>ID</Th>
                         <Th>Employee Name</Th>
                         <Th>Employee Salary</Th>
+                        <Th>Passport</Th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +74,7 @@ const ListEmployee = () => {
                             <Td>{item.id}</Td>
                             <Td>{item.firstName}</Td>
                             <Td>{item.lastName}</Td>
+                            <Td style={{color: item?.checkbox ? 'green' : 'red'}}>{item?.checkbox ? "Yes" : "No"}</Td>
                         </tr>
                     ))}
                 </tbody>

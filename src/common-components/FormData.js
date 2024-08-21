@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 
 const FormData = () => {
-  return <div style={{width: '400px', background: '#F#F#F',height: '400px', borderRadius: '8px', border: '1px solid'}}>
-    <form>
-        <label>Employee Name</label>
-        <input />
-        <label>Employee Salary</label>
-        <input />
-        <label>Employee age</label>
-        <input />
-        <label>ID</label>
-        <input />
+    const [form, setForm] = useState({
+        firsName: '',
+        lastName: '',
+        checkbox: '',
+
+    })
+    const [data, setData] = useState("")
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        setData(form)
+    }
+    console.log(data,"Data::::",form)
+  return <div style={{ display: 'flex', justifyContent: 'center', borderRadius: '8px'}}>
+    <form style={{display: 'flex', flexDirection: 'column'}}>
+        <label>First Name</label>
+        <input id = 'firstName' onChange={ e => setForm({...form, [e.target.id]: e.target.value})} />
+        <label>Last Name</label>
+        <input id = 'lastName' onChange={ e => setForm({...form, [e.target.id]: e.target.value})}/>
+       <label style={{display: 'flex'}}>
+       <p>Are you okay with terms consition</p>
+       <input id = "isAgree" onChange={ e => setForm({...form, [e.target.id]: e.target.value })} type="checkbox" />
+       </label>
+       <button onClick={handleSubmit}>Submit</button>
     </form>
   </div>;
 };
