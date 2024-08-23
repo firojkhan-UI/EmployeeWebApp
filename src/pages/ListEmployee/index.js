@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LIST_EMP_URL } from '../../apiUrls';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_EMP_LIST } from '../../store/ListEmployee/type';
 
 const WrapperTable = styled.div`
     display: flex;
@@ -28,35 +30,41 @@ const Td = styled.td`
 `;
 
 const ListEmployee = () => {
+    const state  = useSelector( state => state?.listEmployee?.listEmployee)
+    console.log(state,"list component::::")
+    const dispatch = useDispatch()
     const [list, setList] = useState([]);
 
-    async function fetchWithRetry(url, options, retries = 3, delay = 2000) {
-        try {
-            const response = await fetch(url, options);
-            if (response.status === 429) { // Rate limit exceeded
-                if (retries > 0) {
-                    console.log(`Rate limit exceeded. Retrying in ${delay}ms...`);
-                    await new Promise(res => setTimeout(res, delay));
-                    return fetchWithRetry(url, options, retries - 1, delay * 2);
-                } else {
-                    throw new Error('Rate limit exceeded. No retries left.');
-                }
-            }
-            return response;
-        } catch (error) {
-            console.error('Fetch error:', error);
-            throw error;
-        }
-    }
+    useEffect( () => {
+        dispatch({type: GET_EMP_LIST})
+    } ,[])
 
-    useEffect(() => {
-        fetchWithRetry(LIST_EMP_URL)
-            .then(response => response.json())
-            .then(data => setList(data || []))
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
+    // async function fetchWithRetry(url, options, retries = 3, delay = 2000) {
+    //     try {
+    //         const response = await fetch(url, options);
+    //         if (response.status === 429) { // Rate limit exceeded
+    //             if (retries > 0) {
+    //                 console.log(`Rate limit exceeded. Retrying in ${delay}ms...`);
+    //                 await new Promise(res => setTimeout(res, delay));
+    //                 return fetchWithRetry(url, options, retries - 1, delay * 2);
+    //             } else {
+    //                 throw new Error('Rate limit exceeded. No retries left.');
+    //             }
+    //         }
+    //         return response;
+    //     } catch (error) {
+    //         console.error('Fetch error:', error);
+    //         throw error;
+    //     }
+    // }
 
-    console.log(list,"List:::::")
+    // useEffect(() => {
+    //     fetchWithRetry(LIST_EMP_URL)
+    //         .then(response => response.json())
+    //         .then(data => setList(data || []))
+    //         .catch(error => console.error('Error fetching data:', error));
+    // }, []);
+
     return (
         <WrapperTable>
             <Table>
@@ -69,7 +77,7 @@ const ListEmployee = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {list.map(item => (
+                    {state.map(item => (
                         <tr key={item.id}>
                             <Td>{item.id}</Td>
                             <Td>{item.firstName}</Td>
